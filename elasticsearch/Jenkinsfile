@@ -1,7 +1,7 @@
 node{
 
 stage("stage1"){   
-  sh "/usr/local/bin/kubectl get nodes"
+  sh "/usr/local/bin/kubectl get nodes  --kubeconfig /root/.kube/config"
 	
 }
 	
