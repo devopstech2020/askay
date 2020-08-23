@@ -13,8 +13,8 @@ stage("test"){
 }
 
 stage("running k8s yaml"){
- sh "kubectl apply -f elasticsearch/svc.yaml"	
- sh "kubectl apply -f elasticsearch/els.yaml"	
+ sh "kubectl apply -f elasticsearch/es-depl.yaml"	
+ sh "kubectl apply -f elasticsearch/es-svc.yaml"	
 }
 
 	
