@@ -1,7 +1,7 @@
 node{
 
-stage("stage1"){   
-  sh "/usr/local/bin/kubectl get nodes "
+stage("git clone"){   
+ checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/hardeepsinghbamrah/askay.git']]])
 	
 }
 	
