@@ -1,0 +1,8 @@
+node{
+
+stage("stage1"){   
+  sh "kubectl get pods"
+	
+}
+	
+}
