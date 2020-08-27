@@ -1,16 +1,17 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: v1
+kind: ReplicationController
 metadata:
+  name: es
   labels:
-    role: elasticsearch
-  name: elasticsearch
+    component: elasticsearch
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        role: elasticsearch
+        component: elasticsearch
     spec:
+      serviceAccount: elasticsearch
       initContainers:
       - name: init-sysctl
         image: busybox
@@ -19,33 +20,39 @@ spec:
         securityContext:
           privileged: true
       containers:
-      - name: elasticsearch
-        image: docker.elastic.co/elasticsearch/elasticsearch:5.6.3
+      - name: es
         securityContext:
-          privileged: false
           capabilities:
             add:
               - IPC_LOCK
-              - SYS_RESOURCE
+        image: quay.io/pires/docker-elasticsearch-kubernetes:5.6.2
         env:
-        - name: CLUSTER_NAME
-          value: "docker-cluster"
-        - name: DISCOVERT_ZEN_MINIMUM_MASTER_NODES
-          value: "1"
-        - name: DISCOVERY_TYPE
-          value: "single-node"
-        - name: XPACK_SECURITY_ENABLED
-          value: "false"
-        - name: XPACK_MONITORING_ENABLED
-          value: "false"
-        - name: XPACK_ML_ENABLED
-          value: "false"
-        - name: XPACK_GRAPH_ENABLED
-          value: "false"
-        - name: XPACK_WATCHER_ENABLED
-          value: "false"
-        - name: ES_JAVA_OPTS
-          value: -Xmx256m -Xms256m
+        - name: KUBERNETES_CA_CERTIFICATE_FILE
+          value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: "CLUSTER_NAME"
+          value: "myesdb"
+        - name: "DISCOVERY_SERVICE"
+          value: "elasticsearch"
+        - name: NODE_MASTER
+          value: "true"
+        - name: NODE_DATA
+          value: "true"
+        - name: HTTP_ENABLE
+          value: "true"
         ports:
         - containerPort: 9200
+          name: http
+          protocol: TCP
         - containerPort: 9300
+          name: transport
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /data
+          name: storage
+      volumes:
+      - name: storage
+        emptyDir: {}
