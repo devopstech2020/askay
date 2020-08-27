@@ -1,7 +1,7 @@
 kind: Service
 metadata:
   labels:
-    role: elasticsearch
+    component: elasticsearch
   name: elasticsearch
 spec:
   ports:
