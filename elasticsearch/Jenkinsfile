@@ -15,7 +15,7 @@ stage("test"){
 stage("running k8s yaml"){
  sh "kubectl apply -f elasticsearch/es-depl.yaml"	
  sh "kubectl apply -f elasticsearch/es-svc.yaml"	
- sh "kubectl get pods"
+ sh "kubectl get pods --all-namespaces"
  sh "kubectl get svc"
 }
 
