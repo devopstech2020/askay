@@ -40,8 +40,7 @@ metadata:
 spec:
   replicas: 1
   selector:
-    app: logstash
-    component: logstash
+    name: logstash
   template:
     metadata:
       labels:
